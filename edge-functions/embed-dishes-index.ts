@@ -1,4 +1,28 @@
 // ============================================================
+// MenuMate -- embed-dishes Edge Function
+// ============================================================
+// Embeds unembedded dishes in paginated batches using gte-small
+// (Supabase-native). Called repeatedly by the frontend until
+// has_more: false.
+//
+// Pipeline:
+//   1. Fetch next 6 dishes where embedding IS NULL
+//   2. Embed in batches of 3 via gte-small
+//   3. Update embedding column per dish
+//   4. Return has_more flag
+//
+// Uses embedding: null as a natural cursor -- no offset
+// tracking needed. For a 22-dish menu, called 4 times.
+//
+// Split from ingest-menu to respect Supabase free tier
+// CPU time limit (2 seconds per invocation).
+//
+// Required environment variables (set in Supabase dashboard):
+//   PROJECT_SUPABASE_URL  -- your Supabase project URL
+//   SERVICE_ROLE_KEY      -- your Supabase service role key
+// ============================================================
+
+// ============================================================
 // IMPORTS
 // ============================================================
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
