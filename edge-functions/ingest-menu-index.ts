@@ -1,4 +1,28 @@
 // ============================================================
+// MenuMate -- ingest-menu Edge Function
+// ============================================================
+// Receives a restaurant menu PDF, extracts all dishes as
+// structured JSON via Gemini, and inserts dish rows into
+// Supabase with embedding: null.
+//
+// Pipeline:
+//   1. Receive PDF as multipart form-data
+//   2. Convert to base64 (safe chunked method)
+//   3. Send to Gemini as inline_data -- Gemini reads natively
+//   4. Parse structured JSON (one object per dish)
+//   5. Delete existing menu with same restaurant name
+//   6. Insert menus row + all dish rows (embedding: null)
+//   7. Return menu_id to frontend
+//
+// Embeddings are handled separately by embed-dishes to stay
+// within Supabase free tier CPU time limits (2s per invocation).
+//
+// Required environment variables (set in Supabase dashboard):
+//   PROJECT_SUPABASE_URL  -- your Supabase project URL
+//   SERVICE_ROLE_KEY      -- your Supabase service role key
+//   GEMINI_API_KEY        -- your Google AI Studio API key
+// ============================================================
+// ============================================================
 // IMPORTS
 // ============================================================
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
