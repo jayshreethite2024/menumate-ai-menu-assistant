@@ -338,24 +338,4 @@ is "ai_generated". Proceed directly to Tier 3.
 
 ---
 
-## Files to Bring Into Next Chat
-
-Upload these to the next chat session:
-- `menumate_stage7_brief.md` (this file) - handoff context
-- `menumate_stage6_brief.md` - needed to run evals
-
-Paste eval results (input + response for all 31 tests) directly into the new chat for consolidated evaluation and report.
-
----
-
-## What Comes After Stage 7
-
-**Stage 8 - Case study and deck:**
-- Fill in resume bullet placeholders (post-build metrics: dishes processed, response accuracy on evals)
-- Write the PM case study narrative
-- Build the portfolio deck - problem, decisions, architecture, evals, learnings
-- Record a demo video as backup for live demo day
-
----
-
 *Stage 7 is complete when: constraint parser fix deployed, all must-pass evals passing, results documented, streaming verified, and Lovable error popup removed.*
