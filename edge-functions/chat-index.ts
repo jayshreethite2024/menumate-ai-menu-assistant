@@ -1,4 +1,31 @@
 // ============================================================
+// MenuMate -- chat Edge Function
+// ============================================================
+// Handles all user queries against an uploaded restaurant menu.
+//
+// Pipeline:
+//   1. Parse constraints + classify query type (Gemini, temp 0.0)
+//   2. Embed semantic query (gte-small)
+//   3. Named dish direct SQL lookup (bypasses vector ranking)
+//   4. SQL filter on hard constraints (allergens, veg, price)
+//   5. Allergen conflict tagging (not silent exclusion)
+//   6. Vector similarity ranking
+//   7. Build context block + conversation history
+//   8. Stream response from Gemini (dynamic temperature)
+//
+// Required environment variables (set in Supabase dashboard):
+//   PROJECT_SUPABASE_URL  -- your Supabase project URL
+//   SERVICE_ROLE_KEY      -- your Supabase service role key
+//   GEMINI_API_KEY        -- your Google AI Studio API key
+//
+// Temperature map:
+//   allergen query    --> 0.1
+//   factual query     --> 0.2
+//   recommendation    --> 0.4
+//   default           --> 0.2
+// ============================================================
+
+// ============================================================
 // IMPORTS
 // ============================================================
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
