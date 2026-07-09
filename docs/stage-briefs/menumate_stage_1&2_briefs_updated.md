@@ -71,15 +71,6 @@ The discomfort of asking a waiter repeatedly about ingredients is as much a driv
 
 ---
 
-### Interview Talking Points - Stage 1
-
-- "I scoped out the order basket from V1 because the AI edge lives in understanding and filtering, not in placing an order - that's a form, not an intelligence problem."
-- "I deliberately kept two personas rather than three. Both users exercise all three feature clusters - a third would have been redundant."
-- "The emotional pain of feeling like a burden at the table is why this needs to be a chat interface, not a set of filters. Filters don't feel private or patient."
-
----
----
-
 ## Stage 2: Data Model & Chunking Strategy
 
 ### Core Architecture Decision
@@ -222,16 +213,6 @@ Not all calorie-curious users want a specific number - some want relative guidan
 
 ---
 
-### Interview Talking Points - Stage 2
-
-- "I separated exact constraints from fuzzy preferences at the data model level - allergens and cooking method are metadata fields queried via SQL, while taste and mood preferences go through semantic search. This means safety-critical fields are never approximated."
-- "The allergen cascade runs per-allergen, not per-dish. I designed it this way after realising that a description mentioning yoghurt tells us nothing about peanuts - descriptions are written to sell dishes, not disclose ingredients."
-- "I applied the same culinary knowledge inference pattern consistently across allergens and cooking method - same logic, same caveat structure, same override hierarchy."
-- "The asymmetry between safety features and preference features is deliberate - being wrong about allergens can cause harm; being roughly right about protein level is genuinely helpful."
-
----
----
-
 ## Stage 3: System Prompt
 
 ### Persona Decision
@@ -306,13 +287,3 @@ Seven-point checklist the model runs before every response. Acts as a second pas
 
 - Retrieved context injection instruction (Stage 4) - the line that tells the model where the menu data is injected in each call
 - Temperature settings (Stage 5) - different features require different temperatures; will revisit system prompt then
-
----
-
-### Interview Talking Points - Stage 3
-
-- "I structured the system prompt based on the lost in the middle attention problem - every NEVER rule appears at both the top and the bottom of the document, not buried in the middle where attention is weakest."
-- "I added a prompt integrity section after realising the grounding instruction alone doesn't prevent instructions embedded in menu data or mid-conversation authority claims - those are different attack surfaces."
-- "I separated ingredient dislikes from allergies explicitly in the system prompt because the response pattern is fundamentally different - modification suggestions are appropriate for dislikes but never for allergies due to cross-contamination risk."
-- "I added a self-check block as a final gate - based on what we know about LLM attention patterns, a second pass at the model's own output catches safety violations the functional sections might miss."
-- "Few-shot prompting - concrete examples for each allergen tier - does more work than three sentences of instruction. LLMs are pattern-matching engines; examples give them a template, not just a rule."
