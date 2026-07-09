@@ -1,8 +1,6 @@
 # MenuMate - Stage 5 Brief
 ## Temperature Settings
 
-*For interview use - PM case study reference*
-
 ---
 
 ## What Stage 5 Is
@@ -249,25 +247,6 @@ This is a responsible AI design decision, not just a convenience rule. When safe
 
 **0.4 ceiling on recommendation temperature**
 Recommendation responses contain hard constraints - allergen exclusions, availability, price - that must be applied consistently. Temperature above 0.4 risks the model occasionally drifting from those constraints. The ceiling is a safety boundary disguised as a style decision.
-
----
-
-## Interview Talking Points - Stage 5
-
-**On dynamic temperature:**
-"I set temperature per query type rather than globally. A single temperature forces a trade-off between safety consistency and conversational warmth that doesn't need to be made - the query type is already known from the parsing step, so the pipeline can apply the right temperature for the right job."
-
-**On allergen temperature:**
-"I set allergen response temperature to 0.1, not 0.0. Zero would give perfectly consistent safety language but robotic phrasing that erodes trust over a conversation. 0.1 is the minimum needed for natural expression while keeping the caveat structure reliable."
-
-**On the conflict resolution rule:**
-"When a query contains multiple intents, allergen always wins. The recommendation parts of a mixed query run at 0.1 instead of 0.4 - slightly more constrained than ideal. That's the correct trade-off. You don't loosen temperature for the conversational parts of a response when safety is also in the query."
-
-**On the 0.4 ceiling:**
-"I capped recommendation temperature at 0.4 rather than going higher. Recommendation responses still contain hard constraints - allergen exclusions, price limits, dish availability. Higher temperature risks the model occasionally drifting from those constraints. The ceiling is a responsible AI decision, not a conservative default."
-
-**On single string output for query_type:**
-"I explicitly instructed the model to output query_type as a single string, never an array. Without that, a multi-intent query might produce an array that breaks the temperature lookup silently - the pipeline would default to 0.2 and apply the wrong temperature to an allergen query with no error and no visibility. Defensive prompt design is as important as defensive code."
 
 ---
 
