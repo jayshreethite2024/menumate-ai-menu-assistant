@@ -1,6 +1,4 @@
 # MenuMate - Stage Briefs
-*Running decisions log for case study and deck*
-
 ---
 
 ## Stage 1: Product Definition
