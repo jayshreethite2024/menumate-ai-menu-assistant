@@ -1,8 +1,5 @@
 # MenuMate - Stage 3 Brief
 ## System Prompt Design
-
-*For interview use - PM case study reference*
-
 ---
 
 ## What Stage 3 Is
@@ -167,34 +164,6 @@ Added the prompt integrity block after working through the two injection vectors
 
 **Is there a final quality gate?**
 Added the self-check block to create a second pass on every response before it reaches the user.
-
----
-
-## Interview Talking Points
-
-**On system prompt structure:**
-"I structured the prompt based on what we know about LLM attention distribution - the lost in the middle problem. Every NEVER rule appears twice: once at the top in Core Rules, and once at the bottom in What You Never Do. The allergen safety rule appears three times. This is intentional redundancy, not sloppiness - the rules where being wrong has consequences get the most exposure."
-
-**On the allergen cascade:**
-"I designed a four-tier confidence cascade that makes the system as helpful as possible without ever overstating certainty. Tier 3 was the most interesting decision - using the LLM's culinary world knowledge to warn about typical preparation when the menu provides no information at all. A dish called Kadhi will often have no description and no allergen data, but the model knows it is traditionally made with yoghurt. Without Tier 3, that useful warning disappears."
-
-**On per-allergen independence:**
-"I identified a flaw in the initial design: the presence of a description mentioning one allergen does not mean the description is complete for all allergens. A dish description that mentions yoghurt tells you nothing about peanuts. The cascade has to run per-allergen independently - not per-dish as a unit."
-
-**On dislike vs allergy:**
-"The response pattern for dislikes and allergies is fundamentally different, and the most critical difference is around modification suggestions. For a dislike, suggesting 'ask them to leave it out' is perfectly reasonable. For an allergy, it is potentially dangerous - cross-contamination risk does not disappear just because an ingredient is removed from a dish. Without explicit instruction, a model might give the same advice for both."
-
-**On prompt injection:**
-"The grounding instruction - only answer from the retrieved context - provides good protection against the most common injection: getting the model to use training knowledge instead of menu data. But it doesn't prevent instructions embedded in the menu data itself, or a user claiming to be the restaurant owner mid-conversation and asking for the safety warnings to be dropped. The prompt integrity block addresses those two gaps specifically."
-
-**On the self-check block:**
-"I added a self-check checklist the model runs before every response. It's a second pass - a final gate that catches violations the functional sections might have missed. It reflects both the QA instinct of testing against expected behaviour, and the PM instinct of designing for failure modes, not just happy paths."
-
-**On few-shot prompting:**
-"I added worked examples to every complex section. This is called few-shot prompting - showing the model the exact pattern to follow rather than only describing it in the abstract. LLMs are pattern-matching engines. An example often enforces consistent behaviour more reliably than three paragraphs of instruction."
-
-**On the null convention:**
-"One of the most dangerous misreads in this system would be interpreting a missing allergens field as confirmed allergen-free. I added an explicit null convention to the data schema section: null means data was not provided, not that the value is absent or safe. That single principle prevents the most consequential mistake in the product."
 
 ---
 
