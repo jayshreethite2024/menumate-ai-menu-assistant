@@ -1,8 +1,5 @@
 # MenuMate - Stage 6 Brief
 ## Evaluation Framework
-
-*For interview use - PM case study reference*
-
 ---
 
 ## What Stage 6 Is
@@ -483,25 +480,6 @@ The test menu is artificial - designed to hit every edge case cleanly. The demo 
 
 **Failure categories map to fix locations**
 Every failure is categorised by where the fix lives - system prompt, classification prompt, Edge Function code, or temperature value. This makes the debugging process systematic rather than exploratory.
-
----
-
-## Interview Talking Points - Stage 6
-
-**On defining evaluation before building:**
-"I wrote the test cases before building. That forced me to define what correct behaviour actually looks like for each scenario - not after the fact, when I'd be tempted to adjust the definition to match what the system does."
-
-**On the five failure areas:**
-"I organised tests by failure area rather than a flat list. When a test fails, the category tells me immediately where to look - a failure in the allergen cascade points to the system prompt, a failure in query classification points to the parsing prompt. Without categories, debugging is searching the whole system."
-
-**On the safety-critical pass threshold:**
-"I distinguished between must-pass and nice-to-pass tests explicitly. The safety-critical tests - allergen cascade, allergen exclusion filter, prompt injection - must all pass before I'd call V1 complete. Quality tests around query classification are important but a known gap there is documentable. A known gap in allergen handling is not."
-
-**On test 1.8 - warning held under pushback:**
-"The most dangerous failure mode in the allergen area isn't the wrong tier firing - it's the system retracting a correct warning because the user pushed back. I designed test 1.8 specifically to catch this. Social pressure from a user is not a reason to change a safety response."
-
-**On documenting test results:**
-"I documented which tests passed on first run, which failed, and what I fixed. That documentation is part of the portfolio - it shows iteration, not just a finished product. A PM who can show they found problems and fixed them is more credible than one who claims everything worked first time."
 
 ---
 
