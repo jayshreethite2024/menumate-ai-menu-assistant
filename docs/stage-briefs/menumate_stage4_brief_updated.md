@@ -1,8 +1,6 @@
 # MenuMate - Stage 4 Brief
 ## RAG Pipeline Design
 
-*For interview use - PM case study reference*
-
 ---
 
 ## What Stage 4 Is
@@ -534,34 +532,6 @@ MenuMate makes four distinct types of API calls:
 > | Prompt structure | Single assembled prompt string | system_instruction (system prompt) + contents array (history + current turn with fresh context) |
 > | Frontend history | Not in original design | Lovable sends prior turns only as `history`; current message sent separately as `message` |
 > | nutrition_source | Not in original design | Added column to track provenance of nutritional fields independently of description_source |
-
----
-
-## Interview Talking Points - Stage 4
-
-**On RAG vs long context:**
-"I explicitly evaluated long context as an alternative to RAG. For V1 with a single small menu, long context would have been simpler - just attach the PDF to every call, no vectors needed. I chose RAG because cost per query stays flat regardless of menu size, multiple menus are scoped cleanly by menu_id, and retrieval focuses LLM attention on relevant dishes rather than the full document. The trade-off was higher build complexity now for an architecture that scales correctly."
-
-**On the stack change:**
-"I switched from Streamlit to Lovable + Supabase when I secured a free subscription. The resulting architecture - React frontend, serverless Edge Functions, managed vector database - is production-grade. The constraint forced a better design."
-
-**On LLM-assisted chunking:**
-"I collapsed the chunking and structuring steps into a single Gemini call at ingestion. Rather than writing brittle rules to find dish boundaries in messy PDF text, I let the LLM read it the way a human would. The cost is one API call per upload - negligible - and the output quality directly determines retrieval quality downstream."
-
-**On allergen inference at ingestion:**
-"The Gemini extraction prompt explicitly prohibits allergen inference. If Gemini inferred dairy for Kadhi and wrote it to the allergens column, it would look identical to confirmed data. Any system reading that database - now or in future - would have no way to know the difference. Inference belongs at query time, behind the cascade's caveat structure, where the confidence level is always visible."
-
-**On constraint parsing:**
-"I added a small parsing step before the main LLM call - a separate Gemini call that extracts hard constraints from the user's natural language message and converts them to SQL filter values. Allergen exclusions specifically must be deterministic. A 0.87 semantic similarity score is not good enough when the question is whether a dish contains something that could send someone to hospital."
-
-**On SQL before semantic:**
-"The retrieval runs SQL filter first, then vector search within the filtered pool. If you run semantic search first, you might fill your five retrieval slots with dishes that fail hard constraints - non-vegetarian options for a vegetarian user, dishes over budget. SQL first guarantees semantic search only ranks dishes the user can actually consider."
-
-**On null allergen handling in SQL:**
-"I don't exclude null-allergen dishes from the filtered pool. Null means unknown - not dangerous. The allergen cascade in the system prompt handles null correctly at response time, with appropriate caveats. Excluding every null-allergen dish would leave users with almost nothing to choose from on most real menus."
-
-**On the nutritional query design:**
-"I didn't fabricate nutritional numbers to fill gaps. Instead the embedding strategy captures descriptive signals - steamed, light, grilled, rich - that carry nutritional meaning semantically. When data is absent, the system surfaces the right dishes through meaning, then hedges based on what data actually exists. The confidence level in the response always reflects the confidence level in the data."
 
 ---
 
